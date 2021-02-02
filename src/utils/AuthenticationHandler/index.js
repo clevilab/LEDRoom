@@ -1,5 +1,5 @@
-import {authorize, refresh} from 'react-native-app-auth';
-
+import { authorize, refresh } from 'react-native-app-auth';
+import Song from 'LEDRoom/src/screens/login/song'
 class AuthenticationHandler {
   constructor() {
     this.spotifyAuthConfig = {
@@ -7,12 +7,9 @@ class AuthenticationHandler {
       clientSecret: '5a26490b3baa465a8132fc069ca0c12f',
       redirectUrl: 'com.ledroom://oauthredirect',
       scopes: [
-        'playlist-read-private',
-        'playlist-modify-public',
-        'playlist-modify-private',
-        'user-library-read',
-        'user-library-modify',
-        'user-top-read',
+
+        'user-read-currently-playing',
+        'user-modify-playback-state'
       ],
       serviceConfiguration: {
         authorizationEndpoint: 'https://accounts.spotify.com/authorize',
@@ -24,11 +21,26 @@ class AuthenticationHandler {
   async onLogin() {
     try {
       const result = await authorize(this.spotifyAuthConfig);
-      alert(JSON.stringify(result));
-      return result;
+      //alert(JSON.stringify(result));
+  
+      fetch('https://api.spotify.com/v1/me/player/currently-playing', {
+        method: 'GET',
+        headers: {
+
+          Authorization: "Bearer " + JSON.stringify(result.accessToken).replace(/\"/g, "")
+        }
+      })
+        .then((response) => response.json())
+        .then((json) => {
+          alert(json.item.name);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+      console.log("AccesToken: " + JSON.stringify(result.accessToken).replace(/\"/g, ""));
     } catch (error) {
       console.log(JSON.stringify(error));
-    } 
+    }
   }
 
   async refreshLogin(refreshToken) {
@@ -38,7 +50,9 @@ class AuthenticationHandler {
     return result;
   }
 
+
 }
+
 
 const authHandler = new AuthenticationHandler();
 
