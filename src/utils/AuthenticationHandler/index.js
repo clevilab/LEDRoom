@@ -1,5 +1,4 @@
 import { authorize, refresh } from 'react-native-app-auth';
-import Song from 'LEDRoom/src/screens/login/song'
 class AuthenticationHandler {
   constructor() {
     this.spotifyAuthConfig = {
@@ -17,30 +16,32 @@ class AuthenticationHandler {
       },
     };
   }
+  /*
+  fetch('https://api.spotify.com/v1/me/player/currently-playing', {
+    method: 'GET',
+    headers: {
+
+      Authorization: "Bearer " + JSON.stringify(result.accessToken).replace(/\"/g, "")
+    }
+  })
+    .then((response) => response.json())
+    .then((json) => {
+      alert(json.item.name);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  console.log("AccesToken: " + JSON.stringify(result.accessToken).replace(/\"/g, ""));
+  */
 
   async onLogin() {
     try {
       const result = await authorize(this.spotifyAuthConfig);
-      //alert(JSON.stringify(result));
-  
-      fetch('https://api.spotify.com/v1/me/player/currently-playing', {
-        method: 'GET',
-        headers: {
-
-          Authorization: "Bearer " + JSON.stringify(result.accessToken).replace(/\"/g, "")
-        }
-      })
-        .then((response) => response.json())
-        .then((json) => {
-          alert(json.item.name);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-      console.log("AccesToken: " + JSON.stringify(result.accessToken).replace(/\"/g, ""));
+      alert(JSON.stringify(result));
+      return result;
     } catch (error) {
       console.log(JSON.stringify(error));
-    }
+    } 
   }
 
   async refreshLogin(refreshToken) {
@@ -49,8 +50,6 @@ class AuthenticationHandler {
     });
     return result;
   }
-
-
 }
 
 
