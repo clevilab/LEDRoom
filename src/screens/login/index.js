@@ -1,32 +1,46 @@
-import React, { Component } from 'react';
-import {
-    View, Button, Text
-} from 'react-native';
+import React, {Component} from 'react';
+import {View, Button} from 'react-native';
 
-import authHandler from "LEDRoom/src/utils/AuthenticationHandler";
+import {connect} from 'react-redux';
+
+import authHandler from 'LEDRoom/src/utils/AuthenticationHandler';
+
+import {
+  setAccessToken,
+  setRefreshToken,
+  setSigingIn,
+} from '../../redux/features/authentication/authenticationSlice';
 
 class LoginScreen extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            currentlySong: "hola mundo"
-        };
-    }
-    setCurrentSong(mensaje) {
-        this.setState({ currentlySong: mensaje})
-      }
-    render() {
-        return (
-            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', flexDirection: 'column'}}>
-                <View>
-                    <Button onPress={() => authHandler.onLogin()} title="Canción actual" />
-                </View>
-                <View>
-                    <Text style={{fontSize: 20, color: 'blue'}}>{this.state.currentlySong}</Text>
-                </View>
-            </View>
-        );
-    }
+  state = {};
+
+  onPressLogin = async () => {
+    const authenticationObject = await authHandler.onLogin();
+    this.props.setAccessToken({accessToken: authenticationObject.accessToken});
+    this.props.setRefreshToken({
+      refreshToken: authenticationObject.refreshToken,
+    });
+  };
+
+
+  render() {
+    return (
+      <View>
+        <Button onPress={this.onPressLogin} title="Press to login" />
+      </View>
+    );
+  }
 }
 
-export default LoginScreen;
+const mapStateToProps = state => {
+  return {
+    authentication: state.authentication,
+  };
+};
+
+const mapDispatchToProps = {setAccessToken, setRefreshToken, setSigingIn};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(LoginScreen);
