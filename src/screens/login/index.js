@@ -25,7 +25,7 @@ class LoginScreen extends Component {
 
   render() {
     return (
-      <View>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Button onPress={this.onPressLogin} title="Press to login" />
       </View>
     );
