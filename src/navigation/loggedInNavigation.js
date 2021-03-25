@@ -10,7 +10,7 @@ const Tab = createBottomTabNavigator();
 const LoggedInNavigation = ({accessToken}) => { 
     function MyFavoriteMusicScreenS() {
         return(
-          <MyFavoriteMusicScreen accessToken={accessToken} />
+          <MyFavoriteMusicScreen accessToken = {accessToken} />
         );
       }
   return (
